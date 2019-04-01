@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>{{ escape(handler.settings["title"]) }}</title>
+  <link rel="stylesheet" href="{{ static_url("bootstrap.css") }}" type="text/css">
+  {% block head %}{% end %}
+</head>
+<body>
+<main role="main">
+  <div class="jumbotron">
+    <div class="container">
+      <h1 class="display-3">{{ escape(handler.settings["title"]) }}</h1>
+    </div>
+  </div>
+
+  <div class="container">
+    {% block body %}{% end %}
+    <hr>
+  </div><!-- /container -->
+
+</main>
+<footer class="container">
+  <p>2019</p>
+</footer>
+{% block footer %}{% end %}
+</body>
+</html>

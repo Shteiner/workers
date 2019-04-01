@@ -1,0 +1,146 @@
+{% extends "base.html" %}
+
+{% block body %}
+    <p><a class="btn btn-primary" href="/" role="button">Список сотрудников</a></p>
+    <hr>
+    <h2>{{ title }}</h2>
+    <form id="app" class="needs-validation" novalidate method="post" v-on:submit="checkForm">
+      <div class="row mb-3">
+        <div class="col-md-6">
+          <label for="lastname">Фамилия</label>
+          <input type="text" class="form-control" id="lastname" name="lastname"
+            v-model="lastname"
+            v-bind:class="{ 'is-invalid': !lastname }">
+          <div class="invalid-feedback">
+            Укажите фамилию сотрудника
+          </div>
+         </div>
+       </div>
+       <div class="row mb-3">
+         <div class="col-md-6">
+           <label for="firstname">Имя</label>
+           <input type="text" class="form-control" id="firstname" name="firstname"
+             v-model="firstname"
+             v-bind:class="{ 'is-invalid': !firstname }">
+           <div class="invalid-feedback">
+             Укажите имя сотрудника
+          </div>
+        </div>
+      </div>
+      <div class="row mb-3">
+        <div class="col-md-6">
+          <label for="middlename">Отчество</label>
+          <input type="text" class="form-control" id="middlename" name="middlename"
+            v-model="middlename"
+            v-bind:class="{ 'is-invalid': !middlename }">
+          <div class="invalid-feedback">
+            Укажите отчество сотрудника
+          </div>
+        </div>
+      </div>
+      <h4 class="mb-3">Пол</h4>
+      <div class="d-block my-3">
+        <div class="custom-control custom-radio">
+          <input id="m" name="gender" type="radio" class="custom-control-input" value="М"
+            v-model="gender"
+            v-bind:class="{ 'is-invalid': !gender }">
+          <label class="custom-control-label" for="m">Мужской</label>
+        </div>
+        <div class="custom-control custom-radio">
+          <input id="f" name="gender" type="radio" class="custom-control-input" value="Ж"
+            v-model="gender"
+            v-bind:class="{ 'is-invalid': !gender }">
+          <label class="custom-control-label" for="f">Женский</label>
+          <div class="invalid-feedback">
+            Выберите пол сотрудника
+          </div>
+        </div>
+      </div>
+      <div class="row mb-3">
+        <div class="col-md-6">
+          <label for="birthday">Дата рождения</label>
+          <input type="date" class="form-control" id="birthday" name="birthday"
+            v-model="birthday"
+            v-bind:class="{ 'is-invalid': !birthday }" >
+          <div class="invalid-feedback">
+            Укажите дату рождения сотрудника
+          </div>
+        </div>
+      </div>
+      <div class="row mb-3">
+        <div class="col-md-6">
+          <label for="department_id">Подразделение</label>
+          <select class="custom-select d-block w-100" id="department_id" name="department_id"
+            v-model="department_id"
+            v-bind:class="{ 'is-invalid': !department_id }">
+            <option value="">Выбрать...</option>
+  {% for department in departments %}
+    {% block department %}
+              <option value="{{ department.id }}">{{ department.name }}</option>
+    {% end %}
+  {% end %}
+          </select>
+          <div class="invalid-feedback">
+            Выберите подразделение
+          </div>
+        </div>
+      </div>
+      <div class="row mb-3">
+        <div class="col-md-6">
+          <label for="email">Электронная почта</label>
+          <input type="email" class="form-control" id="email" name="email"
+            v-model="email"
+            v-bind:class="{ 'is-invalid': errors.email }"
+            v-on:change="change">
+          <div class="invalid-feedback">
+            Укажите электронную почту
+          </div>
+        </div>
+      </div>
+      <div class="row mb-3">
+        <div class="col-md-6">
+          <button class="btn btn-primary btn-block" type="submit">Сохранить</button>
+        </div>
+      </div>
+    </form>
+    <hr>
+{% end %}
+
+{% block footer %}
+<script src="{{ static_url("vue.min.js") }}"></script>
+<script type="text/javascript">
+const app = new Vue({
+  el: '#app',
+  data: {
+    errors: {
+      email: false
+    },
+    firstname: "{{ entry.firstname if entry else "" }}",
+    lastname: "{{ entry.lastname if entry else "" }}",
+    middlename: "{{ entry.middlename if entry else "" }}",
+    gender: "{{ entry.gender if entry else "" }}",
+    birthday: "{{ entry.get_form_date() if entry else "" }}",
+    department_id: {{ entry.department_id if entry else 0 }},
+    email: "{{ entry.email if entry else "" }}"
+  },
+  methods: {
+    change: function (e) {
+      this.$data.errors[e.target.id] = false
+    },
+    checkForm: function (e) {
+      if (this.firstname && this.middlename &&
+            this.lastname && this.department_id && (!this.email || this.validateEmail(this.email)) && this.gender) {
+        return true;
+      }
+      if (this.email && !this.validateEmail(this.email)) {
+        this.errors.email = true;
+      }
+      e.preventDefault();
+    },
+    validateEmail: function(email) {
+      var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+      return re.test(email);
+    }
+  }})
+</script>
+{% end %}

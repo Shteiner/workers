@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block body %}
+    <p><a class="btn btn-primary" href="/" role="button">Список сотрудников</a></p>
+    <hr>
+    <div class="row">
+      <div class="col-md-12">
+        <h2>{{ entry.get_full_name() }}</h2>
+        {% if entry.gender %}<p>Пол: {{ entry.get_gender() }}</p>{% end %}
+        <p>Дата рождения: {{ entry.get_birthday() }}</p>
+        <p>Подразделение: {{ entry.get_department() }}</p>
+        {% if entry.email %}<p>Электронная почта: {{ entry.email }}</p>{% end %}
+        <p>
+          <a class="btn btn-secondary" href="{{ entry.get_edit_url() }}" role="button">Редактировать</a>
+          <a class="btn btn-danger" href="{{ entry.get_delete_url() }}" role="button">Удалить</a>
+        </p>
+      </div>
+    </div>
+    <hr>
+{% end %}

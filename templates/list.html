@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block body %}
+    <p><a class="btn btn-primary" href="/add/0/" role="button">Добавить сотрудника</a></p>
+    <hr>
+  {% for entry in entries %}
+    {% block entry %}
+    <div class="row">
+      <div class="col-md-12">
+        <h2>{{ entry.get_name() }}</h2>
+        <p>
+          <a class="btn btn-info" href="{{ entry.get_view_url() }}" role="button">Подробней</a>
+          <a class="btn btn-secondary" href="{{ entry.get_edit_url() }}" role="button">Редактировать</a>
+          {% if entry.get_archive_url() %}<a class="btn btn-warning" href="{{ entry.get_archive_url() }}" role="button">Убрать в архив</a>{% end %}
+          {% if entry.get_active_url() %}<a class="btn btn-warning" href="{{ entry.get_active_url() }}" role="button">Активировать</a>{% end %}
+          <a class="btn btn-danger" href="{{ entry.get_delete_url() }}" role="button">Удалить</a>
+        </p>
+      </div>
+    </div>
+    <hr>
+    {% end %}
+  {% end %}
+    <a href="{{ url }}">{{ 'Сотрудники' if archive else 'Архив' }}</a>
+    <hr>
+{% end %}
